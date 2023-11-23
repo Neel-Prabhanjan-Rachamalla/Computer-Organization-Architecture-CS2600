@@ -1,0 +1,60 @@
+; CS-2610 LAB ASSIGNMENT - 3			ASSIGNMENT-3.asm
+; Objectives :- To perform recursive Ackerman's function.
+; Inputs     :- Two whole numbers m,n.
+; Outputs    :- Ackerman's function(m,n).
+
+%include "io.mac"
+
+.UDATA
+	m		resd	1
+	n		resd	1
+	result	resd	1
+
+.CODE
+	.STARTUP
+		GetLInt	[m]
+		GetLInt	[n]
+		mov		EAX,[m]
+		push		EAX
+		mov		EAX,[n]
+		push		EAX
+		call		Afun
+		mov		[result],EAX
+		PutLInt	[result]
+		nwln
+	.EXIT
+
+Afun:
+		enter		0,0
+		mov		ECX,[EBP+12]
+		cmp		ECX,0
+		jne		elif
+		mov		EAX,[EBX+8]
+		inc		EAX
+		jmp		return
+	elif:
+		mov		ECX,[EBP+8]
+		cmp		ECX,0
+		jne		recur
+		mov		ECX,[EBP+12]
+		dec		ECX
+		push		ECX
+		push		1
+		call		Afun
+		jmp		return
+	recur:
+		mov		ECX,[EBP+8]
+		dec		ECX
+		mov		EDX,[EBP+12]
+		push		EDX
+		push		ECX
+		call		Afun
+		mov		EDX,EAX
+		mov		ECX,[EBP+12]
+		dec		ECX
+		push		ECX
+		push		EDX
+		call		Afun
+	return:
+		leave
+		ret 8
